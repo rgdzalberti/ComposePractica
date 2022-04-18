@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
@@ -13,22 +14,21 @@ import java.io.File
 
 class DatosArchivo(){
 
-    var pathReferencia = ""
-
+    var pathReferencia = mutableStateOf("")
     val userPath = System.getProperty("user.dir")
 
     /////////////////////Datos para el output del archivo/////////////////////////
     val nombreOutput = "salida.txt"
     val outputArchivo = userPath + "\\src\\main\\resources\\" + nombreOutput
-    var archivoSalida = File(outputArchivo)
+    var archivoSalida = File("C:\\Users\\Ricar\\IdeaProjects\\ComposePractica\\src\\main")
     /////////////////////////////////////////////////////////////////////////////
 
     fun procesarArchivo(){
 
         //Hago un cambio según los contenidos del archivo y lo outputeo
-        println("AA")
-        println(pathReferencia)
-        println("AA")
+        println("AAAAAAAAAAAAAAAAAA")
+        println("valor PathReferencia.value 2 ->" + pathReferencia.value)
+        println("AAAAAAAAAAAAAAAAAA")
 
         if (archivoSalida.exists())
         {
@@ -39,10 +39,10 @@ class DatosArchivo(){
     }
 
     fun escribirOutput(){
-        println(pathReferencia)
+        println(pathReferencia.value)
 
         val contenidoInput = mutableListOf<String>()
-        File(pathReferencia).useLines { lines -> lines.forEach { contenidoInput.add(it) }}
+        File(pathReferencia.value).useLines { lines -> lines.forEach { contenidoInput.add(it) }}
 
         //Creo la variable filtro que indicará si queremos que los contenidos del archivo sean modificados con un paso extra
         var filtro = true
@@ -92,14 +92,21 @@ fun button(){
 fun buttonValidate(text: MutableState<String>){
 
     val accesoDatosArchivo = DatosArchivo()
-    println(text.value)
+    println("=====================")
+    println("VALOR DE TEXT.VALUE ->" + text.value)
+    accesoDatosArchivo.pathReferencia.value = text.value
+    println("VALOR pathReferencia.VALUE ->" + accesoDatosArchivo.pathReferencia.value)
+    println("=====================")
+    //{accesoDatosArchivo.pathReferencia.value = text.value}
 
     Button(
-        onClick = {accesoDatosArchivo.pathReferencia = text.value},
+        onClick = { TODO() },
         colors = ButtonDefaults.textButtonColors(backgroundColor = Color.Yellow)
     ) {
         Text("ㅤㅤㅤValidarㅤㅤㅤ", fontSize = 11.sp,fontFamily = FontFamily.Serif,color = Color.Black,)
     }
+
+
 
 }
 
@@ -127,7 +134,7 @@ fun buttonOpen(){
 
             //Como lo voy a abrir por CMD necesito la ruta pero quitandole el nombre del archivo al final, así que los separo aquí y posteriormente lo uso en el Runtime
 
-            var rutaOriginal = accesoDatosArchivo.pathReferencia
+            var rutaOriginal = accesoDatosArchivo.pathReferencia.value
             var rutaCortada = rutaOriginal.split("\\")
             var nombreArchivo = rutaCortada.last()
             rutaCortada = rutaCortada.dropLast(1)
