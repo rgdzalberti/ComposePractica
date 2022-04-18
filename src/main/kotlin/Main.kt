@@ -117,7 +117,16 @@ fun main()  {
 
      */
 
-    val path = System.getProperty("user.dir")
-    println(path)
+    val path = "C:\\Users\\Ricar\\IdeaProjects\\ComposePractica\\src\\main\\resources\\entrada.txt"
+    var rutaOriginal = path
+    var rutaCortada = rutaOriginal.split("\\")
+    var nombreArchivo = rutaCortada.last()
+    rutaCortada = rutaCortada.dropLast(1)
+
+    var rutaNueva = ""
+    for (i in 0 until rutaCortada.size) {
+        rutaNueva = rutaNueva + rutaCortada[i] + "\\"
+    }
+
 
 }

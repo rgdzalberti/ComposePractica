@@ -4,33 +4,43 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import java.io.File
 
-class DatosArchivo(pathReferencia: String){
+class DatosArchivo(){
 
-    val pathReferencia = pathReferencia
+    var pathReferencia = ""
+
     val userPath = System.getProperty("user.dir")
 
+    /////////////////////Datos para el output del archivo/////////////////////////
     val nombreOutput = "salida.txt"
     val outputArchivo = userPath + "\\src\\main\\resources\\" + nombreOutput
     var archivoSalida = File(outputArchivo)
+    /////////////////////////////////////////////////////////////////////////////
 
     fun procesarArchivo(){
 
         //Hago un cambio según los contenidos del archivo y lo outputeo
+        println("AA")
+        println(pathReferencia)
+        println("AA")
 
         if (archivoSalida.exists())
         {
             archivoSalida.delete()
             procesarArchivo()
         }
-        else{ escribirOutput() }
+        else{escribirOutput()}
     }
 
     fun escribirOutput(){
+        println(pathReferencia)
+
         val contenidoInput = mutableListOf<String>()
         File(pathReferencia).useLines { lines -> lines.forEach { contenidoInput.add(it) }}
 
@@ -47,6 +57,8 @@ class DatosArchivo(pathReferencia: String){
         else {
             contenidoInput.forEach { archivoSalida.writeText(it) }
         }
+
+
     }
 
     fun filtro(contenidoInput : MutableList<String>): MutableList<String>{
@@ -77,18 +89,58 @@ fun button(){
 }
 
 @Composable
-fun buttonRead(){}
+fun buttonValidate(text: MutableState<String>){
+
+    val accesoDatosArchivo = DatosArchivo()
+    println(text.value)
+
+    Button(
+        onClick = {accesoDatosArchivo.pathReferencia = text.value},
+        colors = ButtonDefaults.textButtonColors(backgroundColor = Color.Yellow)
+    ) {
+        Text("ㅤㅤㅤValidarㅤㅤㅤ", fontSize = 11.sp,fontFamily = FontFamily.Serif,color = Color.Black,)
+    }
+
+}
 
 @Composable
-fun buttonWrite(pathReferencia: String){
+fun buttonWrite(){
 
-    val accesoDatosArchivo = DatosArchivo(pathReferencia)
+    val accesoDatosArchivo = DatosArchivo()
 
     Button(
         onClick = { accesoDatosArchivo.procesarArchivo() },
         colors = ButtonDefaults.textButtonColors(backgroundColor = Color.Green)
     ) {
-        Text("OUTPUT", fontSize = 11.sp,fontFamily = FontFamily.Serif,color = Color.White)
+        Text("ㅤOutputㅤ", fontSize = 11.sp,fontFamily = FontFamily.Serif,color = Color.White)
+    }
+
+}
+
+@Composable
+fun buttonOpen(){
+
+    val accesoDatosArchivo = DatosArchivo()
+
+    Button(
+        onClick = {
+
+            //Como lo voy a abrir por CMD necesito la ruta pero quitandole el nombre del archivo al final, así que los separo aquí y posteriormente lo uso en el Runtime
+
+            var rutaOriginal = accesoDatosArchivo.pathReferencia
+            var rutaCortada = rutaOriginal.split("\\")
+            var nombreArchivo = rutaCortada.last()
+            rutaCortada = rutaCortada.dropLast(1)
+
+            var rutaNueva = ""
+            for (i in 0 until rutaCortada.size) {
+                rutaNueva = rutaNueva + rutaCortada[i] + "\\"
+            }
+
+            Runtime.getRuntime().exec(arrayOf("cmd", "/c", "cd ${rutaNueva} & ${nombreArchivo}")) },
+        colors = ButtonDefaults.textButtonColors(backgroundColor = Color.Green)
+    ) {
+        Text("ㅤAbrirㅤ", fontSize = 11.sp,fontFamily = FontFamily.Serif,color = Color.White)
     }
 
 }
