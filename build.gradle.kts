@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
+    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
 }
 
 tasks.withType<KotlinCompile> {
