@@ -18,6 +18,8 @@ import androidx.compose.ui.window.application
 import java.io.File
 import java.io.PrintWriter
 import kotlinx.cli.*
+import java.io.BufferedReader
+import java.io.FileWriter
 
 @Composable
 fun backgroundImage() {
@@ -86,6 +88,19 @@ fun botonSalida(path:String){
         }
     }
     salida.close()
+
+    //escribo dentro deste archivo
+    File(path).bufferedWriter().use {
+        FileWriter("joja")
+    }
+
+    //Guarda contenidos de un archivo
+    var listaDeFrases = File(path).bufferedReader().use(BufferedReader::readLines).toMutableList()
+
+    //Pegar contenidos salida
+    File(pathSalida).bufferedWriter().use{
+        listaDeFrases.forEach { FileWriter(it + "\n") }
+    }
 
 }
 
